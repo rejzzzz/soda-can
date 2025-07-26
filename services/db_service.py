@@ -7,9 +7,9 @@ from datetime import datetime, timedelta
 import uuid
 import json
 
-class DatabaseService:
+class AsyncDatabaseService:
     @staticmethod
-    async def create_document(db: Session, url: str, file_type: str = None, metadata: dict = None):
+    async def create_document(db: AsyncSession, url: str, file_type: str = None, metadata: dict = None):
         """Create a new document record"""
         document = Document(
             url=url,
@@ -18,8 +18,8 @@ class DatabaseService:
             status='pending'
         )
         db.add(document)
-        db.commit()
-        db.refresh(document)
+        await db.commit()
+        await db.refresh(document)
         return document
 
     @staticmethod

@@ -5,6 +5,7 @@ import uvicorn
 import time
 from api.routes import router
 from config import Config
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(
     title="Intelligent Query System",
@@ -32,6 +33,12 @@ async def add_process_time_header(request: Request, call_next):
     response.headers["X-Process-Time"] = str(process_time)
     return response
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/favicon.ico")
+async def favicon():
+    return FileResponse("static/favicon.ico")
+
 @app.get("/")
 async def root():
     return {"message": "Intelligent Query System API is running!"}
@@ -49,5 +56,5 @@ if __name__ == "__main__":
         "main:app",
         host="0.0.0.0",
         port=Config.PORT,
-        reload=False
+        reload=True
     )
