@@ -13,7 +13,7 @@ from tqdm import tqdm
 import re
 
 # --- Download NLTK data (only need to do this once) ---
-nltk.download('punkt', quiet=True)
+nltk.download('punk_tab', quiet=True)
 nltk.download('stopwords', quiet=True)
 nltk.download('wordnet', quiet=True)
 
