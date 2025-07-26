@@ -5,14 +5,23 @@ from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Database configuration
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/query_system")
+
+# Create engine
 engine = create_engine(DATABASE_URL, echo=False)  # Set to True for debugging
+
+# Create session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Base class for models
 Base = declarative_base()
 
 def get_db():
+    """Dependency for FastAPI to get DB session"""
     db = SessionLocal()
     try:
         yield db
@@ -20,6 +29,10 @@ def get_db():
         db.close()
 
 def init_db():
-    from models.schemas import Document, Clause, Embedding, QueryLog, QueryResult, APICache
+    """Initialize database tables"""
+    from models.schemas import Document, Clause, QueryLog, QueryResult, APICache
     Base.metadata.create_all(bind=engine)
-    print("✅ PostgreSQL tables created successfully!")
+    print("✅ Database tables created successfully!")
+
+if __name__ == "__main__":
+    init_db()
