@@ -48,15 +48,12 @@ async def get_answers():
         answers_list = await cag_engine.generate_batch_answers(questions, document_url)
         
         # Format the response
-        answers = []
-        for i, question in enumerate(questions):
-            answers.append({
-                "question": question,
-                "answer": answers_list[i] if i < len(answers_list) else "Error: No response generated"
-            })
+        answers = [
+            answer if answer else "No answer found."
+            for answer in answers_list
+        ]
         
         return jsonify({
-            "document_url": document_url,
             "answers": answers
         }), 200
         
